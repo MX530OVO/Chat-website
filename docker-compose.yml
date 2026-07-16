@@ -1,0 +1,17 @@
+services:
+  chat:
+    build: .
+    ports:
+      - "${PORT:-8787}:8787"
+    environment:
+      PORT: 8787
+      HOST: 0.0.0.0
+      DATABASE_PATH: /data/chat.sqlite3
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD}
+      APP_SECRET: ${APP_SECRET:?set APP_SECRET}
+    volumes:
+      - chat-data:/data
+    restart: unless-stopped
+
+volumes:
+  chat-data:

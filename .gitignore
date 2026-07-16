@@ -1,0 +1,20 @@
+# Runtime and persistent user data
+data/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Local logs and tunnel/runtime artifacts
+*.log
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Editor and OS metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

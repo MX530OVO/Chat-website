@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>异世界导航</title>
+    <link rel="stylesheet" href="styles.css?v=20260716-3" />
+  </head>
+  <body>
+    <header class="top-bar is-hidden" aria-hidden="true">
+      <div>
+        <p class="eyebrow">ISEKAI GATEWAY</p>
+        <h1>异世界导航</h1>
+      </div>
+      <div class="top-status">
+        <div class="world-label" id="topWorldLabel">世界线坐标 · NAV-校准中</div>
+        <div class="status-chip" id="topConnectionStatus">
+          <span></span>
+          <b>未连接</b>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="hero-panel">
+        <div class="phone-scene" aria-label="手机中的当前对话">
+          <div class="phone-shell">
+            <div class="phone-camera" aria-hidden="true"></div>
+            <div class="phone-screen">
+              <section class="phone-calendar" aria-label="当前日期与时段">
+                <div class="phone-date-numbers"><strong id="phoneMonth">--</strong><i>/</i><strong id="phoneDay">--</strong></div>
+                <div class="phone-date-copy"><b id="phoneWeekday">星期--</b><span id="phoneDayPeriod">--</span></div>
+                <i class="phone-time-icon" id="phoneTimeIcon" aria-hidden="true"></i>
+              </section>
+              <div class="phone-screen-top">
+                <span>异世界导航</span>
+                <div class="status-chip phone-status" id="connectionStatus">
+                  <span></span>
+                  <b>未连接</b>
+                </div>
+              </div>
+              <div class="world-label phone-world" id="worldLabel">NAV-校准中</div>
+              <ol class="phone-preview" id="phonePreview" aria-label="当前对话预览"></ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="workbench">
+        <section class="gate-card" id="gatePanel">
+          <p class="eyebrow">PORTAL PERMIT</p>
+          <h2>申请进入导航频道</h2>
+          <form class="gate-form" id="gateForm">
+            <label>
+              <span>你的代号</span>
+              <input id="nickname" name="nickname" maxlength="18" autocomplete="nickname" required />
+            </label>
+            <div class="avatar-picker" aria-label="头像选择">
+              <span>选择头像</span>
+              <div class="avatar-grid" id="avatarGrid"></div>
+              <a class="ghost-link" href="avatars.html">打开头像选择页</a>
+            </div>
+            <button class="primary-button" type="submit">提交通行申请</button>
+          </form>
+          <a class="ghost-button link-button admin-entry-button" href="http://127.0.0.1:8787/?admin=1">管理员控制台</a>
+            <p class="system-note" id="gateNote">管理员批准前，你不会看到异世界频道内容。</p>
+        </section>
+
+        <section class="chat-panel is-hidden" id="chatPanel" aria-label="聊天频道">
+          <header class="room-top">
+            <div>
+              <p class="eyebrow">NAVIGATION CHANNEL</p>
+              <h2>异世界导航频道</h2>
+            </div>
+            <div class="room-actions">
+              <button class="ghost-button" id="publicChannelHeaderButton" type="button">公屏</button>
+              <a class="ghost-button link-button" href="avatars.html">头像</a>
+            </div>
+          </header>
+
+          <section class="channel-body">
+            <aside class="private-panel" aria-label="私聊列表">
+              <div class="private-panel-top">
+                <button class="tab-button is-active" id="publicChannelButton" type="button">频道</button>
+                <button class="ghost-button" id="refreshContacts" type="button">刷新</button>
+              </div>
+              <div class="contact-list" id="contactList"></div>
+            </aside>
+            <section class="online-roster" id="onlineRoster" aria-label="当前在线成员"></section>
+            <ol class="messages" id="messages" aria-live="polite"></ol>
+          </section>
+
+          <form class="composer" id="composer">
+            <div class="identity-row">
+              <label>
+                <span>显示代号</span>
+                <input id="chatName" maxlength="18" autocomplete="nickname" />
+              </label>
+              <div class="moods" role="radiogroup" aria-label="消息信号色">
+                <label class="mood star">
+                  <input type="radio" name="mood" value="star" checked />
+                  <span>黄</span>
+                </label>
+                <label class="mood ember">
+                  <input type="radio" name="mood" value="ember" />
+                  <span>红</span>
+                </label>
+              </div>
+            </div>
+            <div class="write-row">
+              <label class="message-field">
+                <span>频道讯息</span>
+                <textarea id="messageText" maxlength="420" rows="1" placeholder="输入消息，Enter 发送，Shift + Enter 换行"></textarea>
+              </label>
+              <button class="send-button" type="submit">发送</button>
+            </div>
+            <p class="system-note" id="chatNote">等待频道同步。</p>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js?v=20260715-11" type="module"></script>
+    <script src="admin-panel.js?v=20260715-12" type="module"></script>
+  </body>
+</html>

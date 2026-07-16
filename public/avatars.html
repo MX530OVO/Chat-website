@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>头像选择 | 暗号频道</title>
+    <link rel="stylesheet" href="styles.css?v=20260715-20" />
+  </head>
+  <body>
+    <main class="avatar-page">
+      <section class="avatar-board">
+        <header class="avatar-page-top">
+          <div>
+            <p class="eyebrow">AVATAR SELECT</p>
+            <h1>选择频道头像</h1>
+          </div>
+          <a class="ghost-button link-button" href="index.html">返回聊天</a>
+        </header>
+
+        <div class="avatar-selected" id="selectedPreview">
+          <span>当前选择</span>
+          <strong>正在同步头像库</strong>
+        </div>
+
+        <section class="avatar-select-grid" id="avatarSelectGrid" aria-label="头像列表"></section>
+
+        <div class="avatar-actions">
+          <button class="primary-button" id="saveAvatar" type="button">保存头像</button>
+          <p class="system-note" id="avatarNote">正在同步头像库……</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="avatars.js?v=20260715-16" defer></script>
+  </body>
+</html>
