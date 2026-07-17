@@ -1,3 +1,7 @@
+if (location.protocol === "file:") {
+  location.replace("http://127.0.0.1:8787/avatars.html");
+}
+
 const grid = document.querySelector("#avatarSelectGrid");
 const preview = document.querySelector("#selectedPreview");
 const saveButton = document.querySelector("#saveAvatar");
@@ -140,5 +144,7 @@ saveButton.addEventListener("click", async () => {
 
 loadAvatars().catch((error) => {
   preview.innerHTML = "<span>当前选择</span><strong>头像库加载失败</strong>";
-  note.textContent = `${error.message}，请刷新页面重试。`;
+  note.textContent = error instanceof TypeError
+    ? "无法连接头像服务。请从聊天网站内打开头像页，并确认服务仍在运行。"
+    : `${error.message}，请刷新页面重试。`;
 });

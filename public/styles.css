@@ -2532,6 +2532,41 @@ body::after {
   display: none;
 }
 
+.private-room-peer {
+  display: none;
+  margin: 5px 0 0;
+  color: #fff8ea;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.chat-panel.is-private-view .room-top {
+  background:
+    linear-gradient(102deg, #050203 0 23%, transparent 23% 100%),
+    linear-gradient(90deg, #8d1004, #c91b05);
+}
+
+.chat-panel.is-private-view .private-room-peer {
+  display: block;
+}
+
+.chat-panel.is-private-view .channel-body {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.chat-panel.is-private-view .online-roster {
+  display: none;
+}
+
+.chat-panel.is-private-view .messages {
+  border-top: 7px solid #050203;
+  background:
+    linear-gradient(135deg, rgba(255, 248, 234, 0.035) 25%, transparent 25%) 0 0 / 28px 28px,
+    linear-gradient(315deg, rgba(201, 27, 5, 0.1) 25%, transparent 25%) 0 0 / 28px 28px,
+    #07030a;
+}
+
 .online-roster {
   position: relative;
   z-index: 4;

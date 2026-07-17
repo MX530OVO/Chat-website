@@ -159,7 +159,8 @@ function renderUsers(target, users, emptyText) {
         <p>${user.status} · ${user.online ? "在线" : "离线"} · ${timeText(user.updatedAt)}</p>
       </div>
       <div class="ops-actions">
-        ${user.status !== "approved" ? actionButton("放行", "approve-user", user.id) : ""}
+        ${user.status === "banned" ? actionButton("解封", "unban-user", user.id) : ""}
+        ${user.status !== "approved" && user.status !== "banned" ? actionButton("放行", "approve-user", user.id) : ""}
         ${user.status !== "rejected" ? actionButton("拒绝", "reject-user", user.id) : ""}
         ${actionButton(user.protected ? "取消保护" : "保护", "protect-user", user.id)}
         ${user.status !== "banned" && !user.protected ? actionButton("封禁", "ban-user", user.id, true) : ""}
@@ -442,6 +443,7 @@ root.addEventListener("click", (event) => {
     return;
   }
   if (action === "approve-user") mutate(`/api/admin/users/${id}/approve`, { method: "POST" });
+  if (action === "unban-user") mutate(`/api/admin/users/${id}/unban`, { method: "POST" });
   if (action === "reject-user") mutate(`/api/admin/users/${id}/reject`, { method: "POST" });
   if (action === "ban-user") mutate(`/api/admin/users/${id}/ban`, {
     method: "POST",

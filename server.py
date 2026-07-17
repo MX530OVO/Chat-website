@@ -799,7 +799,7 @@ def private_history(
     current = ensure_approved(deviceId)
     peer = get_user_by_id(peerId)
     if not peer or peer["status"] != "approved":
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "private peer not found")
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "该用户当前无法接收私聊，可能已被拒绝或封禁")
     return {
         "peer": user_public(peer),
         "messages": list_private_messages_for_user(current["id"], peer["id"]),
@@ -875,7 +875,7 @@ async def post_private_message(payload: PrivateMessageIn, request: Request) -> J
     sender = ensure_approved(payload.deviceId)
     recipient = get_user_by_id(payload.recipientId)
     if not recipient or recipient["status"] != "approved":
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "private peer not found")
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "该用户当前无法接收私聊，可能已被拒绝或封禁")
     if recipient["id"] == sender["id"]:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "cannot send private message to yourself")
 
@@ -1128,6 +1128,29 @@ async def admin_ban(user_id: int, payload: BanIn) -> dict[str, Any]:
             "INSERT INTO bans(device_id, ip_hash, reason, created_at) VALUES (?, ?, ?, ?)",
             (row["device_id"], ban_ip, clean_text(payload.reason, 120), timestamp),
         )
+
+    updated = get_user_by_id(user_id)
+    session = user_public(updated)
+    await publish({"type": "session", "deviceId": row["device_id"], "session": session})
+    return {"session": session}
+
+
+@app.post("/api/admin/users/{user_id}/unban", dependencies=[Depends(require_admin)])
+async def admin_unban(user_id: int) -> dict[str, Any]:
+    row = get_user_by_id(user_id)
+    if not row:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "用户不存在")
+
+    timestamp = now_ms()
+    with db() as conn:
+        conn.execute(
+            "UPDATE users SET status = 'approved', updated_at = ? WHERE id = ?",
+            (timestamp, user_id),
+        )
+        # A ban row stores the device code and, by default, its IP fingerprint
+        # together. Removing the row is required or the next session sync would
+        # immediately mark the user as banned again.
+        conn.execute("DELETE FROM bans WHERE device_id = ?", (row["device_id"],))
 
     updated = get_user_by_id(user_id)
     session = user_public(updated)

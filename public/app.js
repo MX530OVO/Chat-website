@@ -22,6 +22,8 @@ const onlineRoster = document.querySelector("#onlineRoster");
 const refreshContacts = document.querySelector("#refreshContacts");
 const publicChannelButton = document.querySelector("#publicChannelButton");
 const publicChannelHeaderButton = document.querySelector("#publicChannelHeaderButton");
+const roomTitle = document.querySelector("#roomTitle");
+const privateRoomPeer = document.querySelector("#privateRoomPeer");
 const messageFieldLabel = document.querySelector(".message-field span");
 const sendButton = document.querySelector(".send-button");
 
@@ -51,6 +53,7 @@ let currentPeer = null;
 let knownPeers = new Map();
 let contactsPoll;
 let previewMessages = [];
+let historyRequestId = 0;
 
 function normalizeMood(mood) {
   return moodFallbacks.get(mood) || "star";
@@ -172,9 +175,15 @@ function isOwnMessage(message) {
 
 function privateThreadMatches(message) {
   return currentPeer && (
-    (message.senderId === session?.id && message.recipientId === currentPeer.id) ||
-    (message.senderId === currentPeer.id && message.recipientId === session?.id)
+    (String(message.senderId) === String(session?.id) && String(message.recipientId) === String(currentPeer.id)) ||
+    (String(message.senderId) === String(currentPeer.id) && String(message.recipientId) === String(session?.id))
   );
+}
+
+function messagesForCurrentConversation(messages = []) {
+  return messages.filter((message) => currentPeer
+    ? privateThreadMatches(message)
+    : message.senderId == null && message.recipientId == null);
 }
 
 function peerFromMessage(message) {
@@ -264,6 +273,10 @@ async function loadContacts() {
 
 function setPublicMode() {
   currentPeer = null;
+  chatPanel?.classList.remove("is-private-view");
+  if (roomTitle) roomTitle.textContent = "异世界导航频道";
+  if (privateRoomPeer) privateRoomPeer.textContent = "";
+  if (publicChannelHeaderButton) publicChannelHeaderButton.textContent = "公屏";
   publicChannelButton?.classList.add("is-active");
   if (messageFieldLabel) messageFieldLabel.textContent = "频道讯息";
   if (messageText) messageText.placeholder = "输入消息，Enter 发送，Shift + Enter 换行";
@@ -274,17 +287,28 @@ function setPublicMode() {
 
 function setPrivateMode(peer) {
   currentPeer = peer;
+  chatPanel?.classList.add("is-private-view");
+  if (roomTitle) roomTitle.textContent = "私聊通讯界面";
+  if (privateRoomPeer) privateRoomPeer.textContent = `正在与 ${peer.nickname} 建立私密通讯`;
+  if (publicChannelHeaderButton) publicChannelHeaderButton.textContent = "← 返回公屏";
   knownPeers.set(String(peer.id), peer);
   publicChannelButton?.classList.remove("is-active");
   if (messageFieldLabel) messageFieldLabel.textContent = `私聊给 ${peer.nickname}`;
   if (messageText) messageText.placeholder = `发给 ${peer.nickname}`;
   if (sendButton) sendButton.textContent = "私聊发送";
   renderContacts();
+  // A private-chat header must never sit above stale public-channel messages.
+  renderHistory([]);
+  chatNote.textContent = `正在加载与 ${peer.nickname} 的私聊记录…`;
   fetchHistory();
 }
 
 function setPrivateModeFromHistory(peer, messages = []) {
   currentPeer = peer;
+  chatPanel?.classList.add("is-private-view");
+  if (roomTitle) roomTitle.textContent = "私聊通讯界面";
+  if (privateRoomPeer) privateRoomPeer.textContent = `正在与 ${peer.nickname} 建立私密通讯`;
+  if (publicChannelHeaderButton) publicChannelHeaderButton.textContent = "← 返回公屏";
   knownPeers.set(String(peer.id), peer);
   publicChannelButton?.classList.remove("is-active");
   if (messageFieldLabel) messageFieldLabel.textContent = `私聊给 ${peer.nickname}`;
@@ -433,6 +457,7 @@ function removeEmpty() {
 }
 
 function renderHistory(messages) {
+  messages = messagesForCurrentConversation(messages || []);
   messagesEl.innerHTML = "";
   rendered = new Set();
   previewMessages = messages || [];
@@ -443,6 +468,7 @@ function renderHistory(messages) {
 
 function renderMessage(message) {
   if (!message || rendered.has(message.id)) return;
+  if (currentPeer ? !privateThreadMatches(message) : message.senderId != null || message.recipientId != null) return;
   rendered.add(message.id);
   if (!previewMessages.some((item) => item.id === message.id)) {
     previewMessages.push(message);
@@ -574,14 +600,19 @@ async function requestSession(nickname, avatarId = null) {
 
 async function fetchHistory() {
   if (session?.status !== "approved") return;
+  const requestId = ++historyRequestId;
+  const requestedPeerId = currentPeer?.id ?? null;
   try {
-    const path = currentPeer
-      ? `/api/private/history?deviceId=${encodeURIComponent(deviceId())}&peerId=${encodeURIComponent(currentPeer.id)}`
+    const path = requestedPeerId != null
+      ? `/api/private/history?deviceId=${encodeURIComponent(deviceId())}&peerId=${encodeURIComponent(requestedPeerId)}`
       : `/api/history?deviceId=${encodeURIComponent(deviceId())}`;
     const data = await api(path);
+    if (requestId !== historyRequestId || String(currentPeer?.id ?? "") !== String(requestedPeerId ?? "")) return;
     renderHistory(data.messages || []);
     chatNote.textContent = currentPeer ? `正在私聊：${currentPeer.nickname}` : "频道已同步。";
   } catch (error) {
+    if (requestId !== historyRequestId || String(currentPeer?.id ?? "") !== String(requestedPeerId ?? "")) return;
+    if (requestedPeerId != null) renderHistory([]);
     chatNote.textContent = error.message;
   }
 }
