@@ -52,18 +52,32 @@ DEFAULT_AVATARS = [
     ("Noir", "#ffd23f", "#050203"),
 ]
 PERSONA_AVATARS = [
-    ("红影", "persona-01-red-rogue.jpg"),
-    ("蓝猫", "persona-02-blue-cat.jpg"),
-    ("黄笑", "persona-03-yellow-smirk.jpg"),
-    ("粉双马尾", "persona-04-pink-twins.jpg"),
-    ("青面具", "persona-05-cyan-mask.jpg"),
-    ("蓝侧影", "persona-06-blue-profile.jpg"),
-    ("绿眼镜", "persona-07-green-glasses.jpg"),
-    ("紫梦", "persona-08-violet-dream.jpg"),
-    ("茶黑影", "persona-09-tan-noir.jpg"),
-    ("红跑者", "persona-10-red-runner.jpg"),
-    ("蓝少年", "persona-11-blue-youth.jpg"),
+    ("Joker", "persona-01-red-rogue.jpg"),
+    ("Mona", "persona-02-blue-cat.jpg"),
+    ("Skull", "persona-03-yellow-smirk.jpg"),
+    ("Panther", "persona-04-pink-twins.jpg"),
+    ("Fox", "persona-05-cyan-mask.jpg"),
+    ("Queen", "persona-06-blue-profile.jpg"),
+    ("Oracle", "persona-07-green-glasses.jpg"),
+    ("Noir", "persona-08-violet-dream.jpg"),
+    ("Crow", "persona-09-tan-noir.jpg"),
+    ("Violet", "persona-10-red-runner.jpg"),
+    ("Wonder", "persona-11-blue-youth.jpg"),
 ]
+
+LEGACY_PERSONA_LABELS = {
+    "persona-01-red-rogue.jpg": "红影",
+    "persona-02-blue-cat.jpg": "蓝猫",
+    "persona-03-yellow-smirk.jpg": "黄笑",
+    "persona-04-pink-twins.jpg": "粉双马尾",
+    "persona-05-cyan-mask.jpg": "青面具",
+    "persona-06-blue-profile.jpg": "蓝侧影",
+    "persona-07-green-glasses.jpg": "绿眼镜",
+    "persona-08-violet-dream.jpg": "紫梦",
+    "persona-09-tan-noir.jpg": "茶黑影",
+    "persona-10-red-runner.jpg": "红跑者",
+    "persona-11-blue-youth.jpg": "蓝少年",
+}
 
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 APP_SECRET = os.getenv("APP_SECRET")
@@ -330,6 +344,10 @@ def ensure_persona_avatars(conn: sqlite3.Connection) -> None:
               sort_order = excluded.sort_order
             """,
             (label, filename, size, index, timestamp),
+        )
+        conn.execute(
+            "UPDATE avatars SET label = ? WHERE filename = ? AND label = ?",
+            (label, filename, LEGACY_PERSONA_LABELS[filename]),
         )
         inserted = True
     if inserted:
