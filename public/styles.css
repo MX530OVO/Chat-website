@@ -4272,23 +4272,51 @@ body:has(#chatPanel:not(.is-hidden))::after {
   }
 }
 
-/* Final original-scale message spacing. */
+/* Final compact message spacing without inter-message connectors. */
 @media (min-width: 861px) {
-  body:has(#chatPanel:not(.is-hidden)) .messages { padding:30px 34px 70px; gap:76px; }
-  body:has(#chatPanel:not(.is-hidden)) .message { width:min(88%,680px); max-width:min(88%,680px); min-height:104px; gap:16px; }
-  body:has(#chatPanel:not(.is-hidden)) .message-avatar { flex:0 0 98px; width:98px; height:84px; margin-right:-14px; border-width:6px; box-shadow:-10px 10px 0 #050203,0 0 0 6px #fff8ea,0 0 0 10px #050203; }
-  body:has(#chatPanel:not(.is-hidden)) .message.mine .message-avatar { margin:0 0 0 -14px; }
-  body:has(#chatPanel:not(.is-hidden)) .message-bubble { min-width:250px; padding:16px 23px 18px; border-width:6px; box-shadow:9px 9px 0 #050203; }
-  body:has(#chatPanel:not(.is-hidden)) .message-bubble::before { left:-34px; top:32px; width:38px; height:30px; border-left-width:6px; border-bottom-width:6px; }
-  body:has(#chatPanel:not(.is-hidden)) .message.mine .message-bubble::before { left:auto; right:-34px; border-right-width:6px; }
-  body:has(#chatPanel:not(.is-hidden)) .meta { margin-bottom:7px; gap:9px; font-size:.8rem; }
-  body:has(#chatPanel:not(.is-hidden)) .meta strong { max-width:13rem; font-size:.94rem; }
-  body:has(#chatPanel:not(.is-hidden)) .message p { font-size:clamp(.98rem,1.25vw,1.12rem); line-height:1.42; }
-  body:has(#chatPanel:not(.is-hidden)) .message-emphasis { top:-42px; right:-24px; width:38px; height:50px; font-size:2.4rem; }
-  body:has(#chatPanel:not(.is-hidden)) .message:not(:last-child)::before { left:102px; bottom:-70px; width:100px; height:68px; }
-  body:has(#chatPanel:not(.is-hidden)) .message:not(:last-child)::after { left:112px; bottom:-59px; width:78px; height:46px; }
-  body:has(#chatPanel:not(.is-hidden)) .message.mine:not(:last-child)::before { left:auto; right:102px; }
-  body:has(#chatPanel:not(.is-hidden)) .message.mine:not(:last-child)::after { left:auto; right:112px; }
+  body:has(#chatPanel:not(.is-hidden)) .messages { padding:24px 30px 40px; gap:28px; }
+  body:has(#chatPanel:not(.is-hidden)) .message { width:min(84%,600px); max-width:min(84%,600px); min-height:78px; gap:11px; }
+  body:has(#chatPanel:not(.is-hidden)) .message-avatar { flex:0 0 78px; width:78px; height:68px; margin-right:-11px; border-width:5px; box-shadow:-8px 8px 0 #050203,0 0 0 5px #fff8ea,0 0 0 8px #050203; }
+  body:has(#chatPanel:not(.is-hidden)) .message.mine .message-avatar { margin:0 0 0 -11px; }
+  body:has(#chatPanel:not(.is-hidden)) .message-bubble { min-width:205px; padding:11px 17px 13px; border-width:5px; box-shadow:7px 7px 0 #050203; }
+  body:has(#chatPanel:not(.is-hidden)) .message.star .message-bubble {
+    border-color:#ffd84d;
+    box-shadow:7px 7px 0 #050203,11px 11px 0 #ffd84d;
+  }
+  body:has(#chatPanel:not(.is-hidden)) .message.ember .message-bubble {
+    border-color:#ff3b30;
+    box-shadow:7px 7px 0 #050203,11px 11px 0 #ff3b30;
+  }
+  body:has(#chatPanel:not(.is-hidden)) .message.star .meta,
+  body:has(#chatPanel:not(.is-hidden)) .message.star .meta strong { color:#ffd84d; }
+  body:has(#chatPanel:not(.is-hidden)) .message.ember .meta,
+  body:has(#chatPanel:not(.is-hidden)) .message.ember .meta strong { color:#ff655d; }
+  body:has(#chatPanel:not(.is-hidden)) .message-bubble::before { left:-28px; top:23px; width:30px; height:25px; border-left-width:5px; border-bottom-width:5px; }
+  body:has(#chatPanel:not(.is-hidden)) .message.mine .message-bubble::before { left:auto; right:-28px; border-right-width:5px; }
+  body:has(#chatPanel:not(.is-hidden)) .meta { margin-bottom:4px; gap:7px; font-size:.72rem; }
+  body:has(#chatPanel:not(.is-hidden)) .meta strong { max-width:11rem; font-size:.84rem; }
+  body:has(#chatPanel:not(.is-hidden)) .message p { font-size:clamp(.86rem,1.05vw,1rem); line-height:1.34; }
+  body:has(#chatPanel:not(.is-hidden)) .message-emphasis { top:-35px; right:-20px; width:32px; height:42px; font-size:2rem; }
+  body:has(#chatPanel:not(.is-hidden)) .message:not(:last-child)::before,
+  body:has(#chatPanel:not(.is-hidden)) .message:not(:last-child)::after {
+    content:none;
+    display:none;
+  }
+}
+
+@media (max-width: 860px) {
+  body:has(#chatPanel:not(.is-hidden)) .message.star .message-bubble {
+    border-color:#ffd84d;
+    box-shadow:6px 6px 0 #050203,9px 9px 0 #ffd84d;
+  }
+  body:has(#chatPanel:not(.is-hidden)) .message.ember .message-bubble {
+    border-color:#ff3b30;
+    box-shadow:6px 6px 0 #050203,9px 9px 0 #ff3b30;
+  }
+  body:has(#chatPanel:not(.is-hidden)) .message.star .meta,
+  body:has(#chatPanel:not(.is-hidden)) .message.star .meta strong { color:#ffd84d; }
+  body:has(#chatPanel:not(.is-hidden)) .message.ember .meta,
+  body:has(#chatPanel:not(.is-hidden)) .message.ember .meta strong { color:#ff655d; }
 }
 
 /* Final handset proportion correction. */
