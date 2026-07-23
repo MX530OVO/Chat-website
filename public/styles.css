@@ -204,6 +204,294 @@
   }
 }
 
+.boot-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 56%, rgba(230, 0, 18, 0.32), transparent 22rem),
+    linear-gradient(114deg, #050203 0 24%, #b91914 24.2% 36%, #050203 36.2% 100%);
+  color: #fff8ea;
+  isolation: isolate;
+  opacity: 1;
+  transition: opacity 0.55s ease, visibility 0.55s ease;
+}
+
+.boot-splash.is-done {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+body:has(#bootSplash:not(.is-done)) .floating-admin {
+  display: none !important;
+}
+
+.boot-splash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 248, 234, 0.07) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(105deg, rgba(255, 248, 234, 0.045) 0 1px, transparent 1px 26px);
+  opacity: 0.34;
+  mix-blend-mode: screen;
+  animation: bootScan 0.82s linear infinite;
+}
+
+.boot-splash::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff8ea;
+  opacity: 0;
+  pointer-events: none;
+  animation: bootFlash 2.6s ease-out both;
+}
+
+.boot-splash__slash,
+.boot-splash__light {
+  position: absolute;
+  pointer-events: none;
+}
+
+.boot-splash__slash {
+  inset: auto -12vw 14vh -12vw;
+  height: 28vh;
+  background:
+    linear-gradient(102deg, transparent 0 18%, #fff8ea 18.4% 21%, #050203 21.4% 62%, #e60012 62.4% 78%, transparent 78.4%);
+  box-shadow: 0 12px 0 #050203;
+  transform: rotate(-6deg);
+  opacity: 0.9;
+}
+
+.boot-splash__light {
+  inset: 0 auto 0 -30vw;
+  width: 24vw;
+  background: linear-gradient(100deg, transparent, rgba(255, 248, 234, 0.84), transparent);
+  filter: blur(2px);
+  transform: skewX(-18deg);
+  animation: bootLight 2.6s cubic-bezier(.18, .8, .18, 1) both;
+}
+
+.boot-splash__core {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: min(78vw, 760px);
+  padding: clamp(24px, 5vw, 62px) clamp(18px, 4vw, 48px);
+  transform: rotate(-1.4deg);
+  animation: bootCoreIn 2.6s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.boot-splash__logo {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: min(70vw, 700px);
+  max-height: 46svh;
+  object-fit: contain;
+  filter: drop-shadow(10px 10px 0 #050203) drop-shadow(0 0 26px rgba(230, 0, 18, 0.42));
+  animation: bootLogoShake 2.6s steps(1, end) both;
+}
+
+.boot-splash__flames {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(6px, 1.6vw, 18px);
+  width: min(62vw, 560px);
+  height: clamp(54px, 10vw, 112px);
+  margin-top: clamp(-22px, -2.4vw, -12px);
+  filter: blur(0.3px) saturate(1.18);
+  pointer-events: none;
+}
+
+.boot-splash__flames span {
+  display: block;
+  width: clamp(36px, 7vw, 82px);
+  height: clamp(48px, 9vw, 108px);
+  background:
+    radial-gradient(circle at 50% 70%, #fff8b4 0 14%, transparent 15%),
+    radial-gradient(circle at 48% 62%, #ffd23f 0 28%, transparent 29%),
+    radial-gradient(circle at 50% 72%, #e60012 0 62%, transparent 63%);
+  clip-path: polygon(50% 0, 64% 24%, 88% 38%, 72% 61%, 80% 100%, 50% 83%, 18% 100%, 28% 62%, 10% 38%, 36% 24%);
+  transform-origin: 50% 100%;
+  opacity: 0.9;
+  animation: bootFlame 0.56s ease-in-out infinite alternate;
+}
+
+.boot-splash__flames span:nth-child(2) {
+  width: clamp(48px, 8vw, 96px);
+  animation-delay: -0.18s;
+}
+
+.boot-splash__flames span:nth-child(3) {
+  width: clamp(58px, 9vw, 112px);
+  height: clamp(64px, 11vw, 132px);
+  animation-delay: -0.31s;
+}
+
+.boot-splash__flames span:nth-child(4) {
+  width: clamp(46px, 7.6vw, 92px);
+  animation-delay: -0.09s;
+}
+
+.boot-splash__flames span:nth-child(5) {
+  animation-delay: -0.25s;
+}
+
+.boot-splash__label,
+.boot-splash__sub {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  text-shadow: 4px 4px 0 #050203;
+}
+
+.boot-splash__label {
+  margin-top: clamp(10px, 2vh, 20px);
+  color: #ffd23f;
+  font-family: "Arial Black", Impact, system-ui, sans-serif;
+  font-size: clamp(1rem, 2.6vw, 2rem);
+}
+
+.boot-splash__sub {
+  margin-top: 8px;
+  color: #fff8ea;
+  font-weight: 900;
+  font-size: clamp(0.9rem, 2vw, 1.35rem);
+}
+
+@keyframes bootCoreIn {
+  0% { opacity: 0; transform: translateY(22px) rotate(-4deg) scale(0.86); }
+  14% { opacity: 1; transform: translateY(0) rotate(-1.4deg) scale(1.04); }
+  78% { opacity: 1; transform: translateY(0) rotate(-1.4deg) scale(1); }
+  100% { opacity: 0; transform: translateY(-10px) rotate(0deg) scale(1.08); }
+}
+
+@keyframes bootLogoShake {
+  0%, 15%, 29%, 43%, 57%, 71%, 85%, 100% { transform: translate(0, 0) skewX(0deg); }
+  22% { transform: translate(-5px, 3px) skewX(-2deg); }
+  36% { transform: translate(4px, -2px) skewX(2deg); }
+  64% { transform: translate(-3px, -1px) skewX(-1deg); }
+  79% { transform: translate(3px, 2px) skewX(1deg); }
+}
+
+@keyframes bootFlame {
+  from { transform: scaleY(0.76) skewX(-5deg); filter: hue-rotate(-8deg); opacity: 0.72; }
+  to { transform: scaleY(1.12) skewX(6deg); filter: hue-rotate(8deg); opacity: 1; }
+}
+
+@keyframes bootScan {
+  from { transform: translateY(0); }
+  to { transform: translateY(8px); }
+}
+
+@keyframes bootLight {
+  0% { transform: translateX(0) skewX(-18deg); opacity: 0; }
+  18% { opacity: 0.75; }
+  54% { opacity: 0.2; }
+  100% { transform: translateX(160vw) skewX(-18deg); opacity: 0; }
+}
+
+@keyframes bootFlash {
+  0%, 72% { opacity: 0; }
+  80% { opacity: 0.22; }
+  84%, 100% { opacity: 0; }
+}
+
+@media (max-width: 760px) {
+  .boot-splash__core {
+    width: min(94vw, 440px);
+    padding-inline: 14px;
+  }
+
+  .boot-splash__logo {
+    width: min(88vw, 420px);
+    max-height: 38svh;
+  }
+
+  .boot-splash__slash {
+    bottom: 11vh;
+    height: 22vh;
+  }
+
+  .boot-splash__flames {
+    width: min(82vw, 380px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-splash,
+  .boot-splash::before,
+  .boot-splash::after,
+  .boot-splash__light,
+  .boot-splash__core,
+  .boot-splash__logo,
+  .boot-splash__flames span {
+    animation: none !important;
+  }
+
+  .boot-splash__core {
+    opacity: 1;
+    transform: none;
+  }
+
+  .boot-splash__flames span {
+    transform: none;
+  }
+}
+
+/* User-facing message polish: roomier rhythm and neutral bubbles. */
+body:has(#chatPanel:not(.is-hidden)) .messages {
+  gap: 46px;
+}
+
+body:has(#chatPanel:not(.is-hidden)) .message.star .message-bubble,
+body:has(#chatPanel:not(.is-hidden)) .message.ember .message-bubble {
+  border-color: #fff8ea;
+  box-shadow: 7px 7px 0 #050203;
+}
+
+body:has(#chatPanel:not(.is-hidden)) .message.star .meta,
+body:has(#chatPanel:not(.is-hidden)) .message.star .meta strong,
+body:has(#chatPanel:not(.is-hidden)) .message.ember .meta,
+body:has(#chatPanel:not(.is-hidden)) .message.ember .meta strong {
+  color: #fff8ea;
+}
+
+body:has(#chatPanel:not(.is-hidden)) .mini-private-button {
+  border-color: #fff8ea;
+  background: #050203;
+  color: #fff8ea;
+  box-shadow: 2px 2px 0 #050203;
+}
+
+@media (min-width: 861px) {
+  body:has(#chatPanel:not(.is-hidden)) .messages {
+    padding-top: 30px;
+    padding-bottom: 52px;
+    gap: 52px;
+  }
+}
+
+@media (max-width: 860px) {
+  body:has(#chatPanel:not(.is-hidden)) .messages {
+    gap: 40px;
+  }
+}
+
+
 /* Drawn grip silhouettes: SVG paths replace the former rounded CSS blobs. */
 .phone-hand,
 body:has(#chatPanel:not(.is-hidden)) .phone-hand {
@@ -3216,6 +3504,9 @@ body:has(#gatePanel:not(.is-hidden))::before { background: linear-gradient(104de
 body:has(#gatePanel:not(.is-hidden))::after { content:""; position:fixed; inset:0 0 0 auto; width:14vw; min-width:70px; background:repeating-linear-gradient(105deg,rgba(255,248,234,.04) 0 1px,transparent 1px 24px),#0b0506; opacity:1; filter:none; }
 body:has(#gatePanel:not(.is-hidden)) .app-shell { width:min(1280px,calc(100vw - 44px)); grid-template-columns:minmax(250px,.72fr) minmax(0,1.65fr); gap:26px; }
 body:has(#gatePanel:not(.is-hidden)) .hero-panel { min-height:calc(100svh - 64px); border:8px solid #050203; border-radius:0; background:linear-gradient(105deg,transparent 0 68%,rgba(199,46,27,.82) 68.2%),#050203; box-shadow:12px 12px 0 #050203; transform:rotate(-1deg); }
+body:has(#gatePanel:not(.is-hidden)) .thief-logo { display:block; position:absolute; z-index:1; left:clamp(12px,3vw,34px); top:clamp(14px,4vh,44px); width:min(54%,280px); aspect-ratio:244/168; object-fit:cover; border:6px solid #fff8ea; background:#050203; box-shadow:7px 7px 0 #c72e1b,12px 12px 0 #050203; transform:rotate(-8deg); pointer-events:none; }
+body:has(#gatePanel:not(.is-hidden)) .phone-scene { z-index:2; }
+body:has(#chatPanel:not(.is-hidden)) .thief-logo { display:none; }
 body:has(#gatePanel:not(.is-hidden)) .hero-panel h1 { color:#fff8ea; font-size:clamp(3.5rem,7vw,7rem); text-shadow:6px 6px 0 #c72e1b; }
 body:has(#gatePanel:not(.is-hidden)) .hero-panel::after { display:block; content:"CONNECTING"; right:18px; bottom:22px; border:5px solid #050203; border-radius:0; background:#fff8ea; color:#050203; box-shadow:6px 6px 0 #c72e1b,10px 10px 0 #050203; }
 body:has(#gatePanel:not(.is-hidden)) .gate-card { width:min(650px,100%); padding:clamp(22px,4vw,42px); border:8px solid #fff8ea; border-radius:0; background:#050203; box-shadow:12px 12px 0 #050203; transform:rotate(-.8deg); }
@@ -3381,7 +3672,7 @@ body:has(#chatPanel:not(.is-hidden)) .identity-row {
   }
 }
 body:has(#gatePanel:not(.is-hidden)) .primary-button { border:5px solid #050203; border-radius:0; background:#fff8ea; color:#050203; box-shadow:6px 6px 0 #c72e1b,10px 10px 0 #050203; transform:skewX(-7deg); }
-@media(max-width:760px){body:has(#gatePanel:not(.is-hidden))::after{display:none}body:has(#gatePanel:not(.is-hidden)) .app-shell{width:min(100vw - 30px,680px);grid-template-columns:1fr}body:has(#gatePanel:not(.is-hidden)) .hero-panel{min-height:180px}body:has(#gatePanel:not(.is-hidden)) .hero-panel h1{font-size:clamp(2.8rem,14vw,4.5rem)}}
+@media(max-width:760px){body:has(#gatePanel:not(.is-hidden))::after{display:none}body:has(#gatePanel:not(.is-hidden)) .app-shell{width:min(100vw - 30px,680px);grid-template-columns:1fr}body:has(#gatePanel:not(.is-hidden)) .hero-panel{min-height:180px}body:has(#gatePanel:not(.is-hidden)) .thief-logo{left:12px;top:14px;width:min(44vw,170px);border-width:4px;box-shadow:5px 5px 0 #c72e1b,8px 8px 0 #050203}body:has(#gatePanel:not(.is-hidden)) .phone-scene{justify-self:end;width:min(62vw,260px);height:170px}body:has(#gatePanel:not(.is-hidden)) .hero-panel h1{font-size:clamp(2.8rem,14vw,4.5rem)}}
 
 /* Persona 5-style live calendar, built from HTML/CSS so it stays dynamic. */
 .phone-calendar { position:relative; z-index:3; min-height:166px; margin:-16px -12px 5px -16px; color:#fff; filter:none; isolation:isolate; }

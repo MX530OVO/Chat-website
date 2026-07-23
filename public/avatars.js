@@ -16,6 +16,27 @@ const storage = {
 let avatars = [];
 let selectedAvatarId = Number(localStorage.getItem(storage.avatar) || 0) || null;
 
+const fallbackAvatars = [
+  ["Joker", "persona-01-red-rogue.jpg"],
+  ["Mona", "persona-02-blue-cat.jpg"],
+  ["Skull", "persona-03-yellow-smirk.jpg"],
+  ["Panther", "persona-04-pink-twins.jpg"],
+  ["Fox", "persona-05-cyan-mask.jpg"],
+  ["Queen", "persona-06-blue-profile.jpg"],
+  ["Navi", "persona-07-green-glasses.jpg"],
+  ["Noir", "persona-08-violet-dream.jpg"],
+  ["Crow", "persona-09-tan-noir.jpg"],
+  ["Violet", "persona-10-red-runner.jpg"],
+  ["Wonder", "persona-11-blue-youth.jpg"],
+].map(([label, filename], index) => ({
+  id: index + 9,
+  label,
+  url: `/assets/avatars/${filename}`,
+  active: true,
+  sortOrder: index + 1,
+  fallback: true,
+}));
+
 function createDeviceId() {
   if (crypto.randomUUID) return crypto.randomUUID();
   return `device-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -110,10 +131,16 @@ function renderGrid() {
 
 async function loadAvatars() {
   note.textContent = "正在同步头像库……";
-  const data = await api(`/api/avatars?t=${Date.now()}`);
-  avatars = data.avatars || [];
-  renderGrid();
-  note.textContent = avatars.length ? "请选择一个头像。" : "头像库暂时为空。";
+  try {
+    const data = await api(`/api/avatars?t=${Date.now()}`);
+    avatars = data.avatars || [];
+    renderGrid();
+    note.textContent = avatars.length ? "请选择一个头像。" : "头像库暂时为空。";
+  } catch (error) {
+    avatars = fallbackAvatars;
+    renderGrid();
+    note.textContent = "服务器头像库暂时不可用，已显示内置头像。";
+  }
 }
 
 saveButton.addEventListener("click", async () => {
@@ -142,9 +169,4 @@ saveButton.addEventListener("click", async () => {
   }
 });
 
-loadAvatars().catch((error) => {
-  preview.innerHTML = "<span>当前选择</span><strong>头像库加载失败</strong>";
-  note.textContent = error instanceof TypeError
-    ? "无法连接头像服务。请从聊天网站内打开头像页，并确认服务仍在运行。"
-    : `${error.message}，请刷新页面重试。`;
-});
+loadAvatars();

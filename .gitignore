@@ -12,6 +12,7 @@ __pycache__/
 .env
 .env.*
 !.env.example
+.vercel/
 
 # Editor and OS metadata
 .vscode/

@@ -7,6 +7,14 @@
 [![SQLite](https://img.shields.io/badge/SQLite-Persistent-fff8ea?style=flat-square&logo=sqlite&logoColor=050203)](https://www.sqlite.org/)
 [![No Build](https://img.shields.io/badge/Frontend-No_Build-16080a?style=flat-square)](#技术实现)
 
+## 网站入口
+
+- 在线访问：[https://anhao-channel.vercel.app/](https://anhao-channel.vercel.app/)
+- 管理员入口：[https://anhao-channel.vercel.app/?admin=1](https://anhao-channel.vercel.app/?admin=1)
+- 本地预览：`http://127.0.0.1:8787/`
+
+> 管理员入口只在 URL 带 `?admin=1` 时显示；生产环境请在部署平台配置强管理员口令和足够长的 `APP_SECRET`。
+
 “暗号频道”不是一个打开链接就能说话的普通聊天室。访客要先选择一张频道头像、填写代号并递交通行申请；只有管理员放行后，手机里的导航状态才会从“未连接”切换为“已放行”，真正进入这条世界线。
 
 项目以《女神异闻录 5》式的怪盗视觉语言为灵感：黑、红、黄的高对比配色，倾斜卡片、粗重描边、漫画切片、手机界面与不完全对齐的排版共同构成一种“手工剪贴但又非常利落”的舞台感。它不是官方项目，而是一次对原作 UI 气质的个人化致敬——没有直接照搬一张菜单，而是把审核、聊天、私聊和后台管理都重新翻译成了“异世界导航”的叙事。

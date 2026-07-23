@@ -26,6 +26,7 @@ const roomTitle = document.querySelector("#roomTitle");
 const privateRoomPeer = document.querySelector("#privateRoomPeer");
 const messageFieldLabel = document.querySelector(".message-field span");
 const sendButton = document.querySelector(".send-button");
+const bootSplash = document.querySelector("#bootSplash");
 
 const storage = {
   device: "cyber-chat-device",
@@ -54,6 +55,42 @@ let knownPeers = new Map();
 let contactsPoll;
 let previewMessages = [];
 let historyRequestId = 0;
+
+const fallbackAvatars = [
+  ["Joker", "persona-01-red-rogue.jpg"],
+  ["Mona", "persona-02-blue-cat.jpg"],
+  ["Skull", "persona-03-yellow-smirk.jpg"],
+  ["Panther", "persona-04-pink-twins.jpg"],
+  ["Fox", "persona-05-cyan-mask.jpg"],
+  ["Queen", "persona-06-blue-profile.jpg"],
+  ["Navi", "persona-07-green-glasses.jpg"],
+  ["Noir", "persona-08-violet-dream.jpg"],
+  ["Crow", "persona-09-tan-noir.jpg"],
+  ["Violet", "persona-10-red-runner.jpg"],
+  ["Wonder", "persona-11-blue-youth.jpg"],
+].map(([label, filename], index) => ({
+  id: index + 9,
+  label,
+  url: `/assets/avatars/${filename}`,
+  active: true,
+  sortOrder: index + 1,
+  fallback: true,
+}));
+
+function dismissBootSplash() {
+  if (!bootSplash) return;
+  const finish = () => {
+    bootSplash.hidden = true;
+    bootSplash.remove();
+  };
+  window.setTimeout(() => {
+    bootSplash.classList.add("is-done");
+    bootSplash.addEventListener("transitionend", finish, { once: true });
+    window.setTimeout(finish, 900);
+  }, 2600);
+}
+
+dismissBootSplash();
 
 function normalizeMood(mood) {
   return moodFallbacks.get(mood) || "star";
@@ -369,9 +406,9 @@ async function loadAvatars() {
     avatars = data.avatars || [];
     renderAvatars();
   } catch {
-    avatars = [];
+    avatars = fallbackAvatars;
     renderAvatars();
-    gateNote.textContent = "头像库同步失败，请稍后重试。";
+    gateNote.textContent = "服务器头像库暂时不可用，已显示内置头像。";
   }
 }
 
